@@ -43,7 +43,7 @@ pipeline {
           }
 	 stage("create docker image"){
              steps {
-	         bat "build -t i-arshdeepsingh-master --no-cache -f Dockerfile ."
+	         bat "docker build -t i-arshdeepsingh-master --no-cache -f Dockerfile ."
 	     }
 	}
     }
