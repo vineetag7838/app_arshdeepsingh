@@ -51,7 +51,7 @@ pipeline {
 		       bat "docker tag i-arshdeepsingh-master devops-home-assignment:v2"
 			   
 			   withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
-			    bat "docker push arshdeepsingh070/devops-home-assignment:v2"
+			    bat "docker push devops-home-assignment:v2"
 			   }
 		   }
 		}
