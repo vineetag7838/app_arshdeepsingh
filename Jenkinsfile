@@ -46,5 +46,25 @@ pipeline {
 	         bat "docker build -t i-arshdeepsingh-master --no-cache -f Dockerfile ."
 	     }
 	}
+	stage ("Push docker image to docker hub"){
+		   steps{
+		       bat "docker tag i-arshdeepsingh-master devops-home-assignment:v2"
+			   
+			   withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
+			    bat "docker push arshdeepsingh070/devops-home-assignment:v2"
+			   }
+		   }
+		}
+		stage ("Docker Deployment"){
+		    steps {
+			   bat "docker run --name DevopsHomeAssignment -d -p 7100:80 docker push arshdeepsingh070/devops-home-assignment:tagname"
+			}
+		
+		}
+		stage ("The end"){
+		    steps{
+			  echo "The process end"
+			}
+		}    
     }
 }
