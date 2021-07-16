@@ -31,8 +31,9 @@ pipeline {
             }
         }
         stage("SonarQube analysis") {
-            def mvn = tool 'Maven3';
+            
             steps {
+              def mvn = tool 'Maven3';
               withSonarQubeEnv('SonarQubeScanner') {
                 bat "${mvn}/bin/mvn sonar:sonar"
               }
