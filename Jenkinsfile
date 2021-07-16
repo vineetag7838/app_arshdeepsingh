@@ -30,10 +30,10 @@ pipeline {
                 bat 'mvn test'
             }
         }
-        stage("build & SonarQube analysis") {
+        stage("SonarQube analysis") {
             agent any
             steps {
-              withSonarQubeEnv('My SonarQube Server') {
+              withSonarQubeEnv('SonarQubeScanner') {
                 bat "${mvn}/bin/mvn sonar:sonar"
               }
             }
