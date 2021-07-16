@@ -31,10 +31,12 @@ pipeline {
             }
         }
         stage('SonarQube Analysis') {
+		    steps {
              def mvn = tool 'Maven3';
              withSonarQubeEnv() {
              sh "${mvn}/bin/mvn sonar:sonar"
              }
+			} 
        }
     }
 }
