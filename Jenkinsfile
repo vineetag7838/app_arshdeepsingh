@@ -1,13 +1,13 @@
 pipeline { 
     agent any
-    
-	environment {
+        
+    tools {
+        maven 'Maven3'
+    }
+    environment {
 	    def mvn = tool 'Maven3';
 		def registry = 'arshdeepsingh070/devops-home-assignment';
 	 
-	}
-    tools {
-        maven 'Maven3'
     }
     
     options {
