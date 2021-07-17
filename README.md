@@ -1,6 +1,6 @@
 # nagp-devops-home-assignment
 
--> Created a simple RestController given the detail of an employee with few Junit test cases available.
+-> Created a simple RestController giving the detail of an employee with few Junit test cases available.
 
 -> Using the Jenkins pipeline to handle the CI/CD and for that:
 
