@@ -21,7 +21,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/ArshdeepSingh070/nagp-devops-home-assignment'
+               checkout scm
             }
         }
         
@@ -49,15 +49,15 @@ pipeline {
 	}
 	stage ("Push docker image to docker hub"){
 	      steps{
-		       bat "docker tag i-arshdeepsingh-master ${registry}:v2"
+		       bat "docker tag i-arshdeepsingh-master ${registry}:${BUILD_NUMBER}"
 			   withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
-			    bat "docker push ${registry}:v2"
+			    bat "docker push ${registry}:${BUILD_NUMBER}"
 			   }
 		   }
 	}
 	stage ("Docker Deployment"){
 	      steps {
-	          bat "docker run --name DevopsHomeAssignment -d -p 7100:8080 ${registry}:v2"
+		      bat "docker run --name DevopsHomeAssignment -d -p 7100:8080 ${registry}:${BUILD_NUMBER}"
 	       }
 		
 	}
