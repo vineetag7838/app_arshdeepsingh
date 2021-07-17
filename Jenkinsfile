@@ -30,11 +30,6 @@ pipeline {
                 bat 'mvn clean install'
             }
         }
-        stage('Unit Testing') {
-            steps {
-                bat 'mvn test'
-            }
-        }
         stage("SonarQube analysis") {
             steps {
               withSonarQubeEnv('SonarQubeScanner') {
@@ -42,6 +37,13 @@ pipeline {
               }
             }
           }
+	 stage("Remove docker images and container"){
+		 steps {
+			 bat "docker rmi arshdeepsingh/devops-home-assignment:${BUILD_NUMBER -1}"
+			 bat "docker stop DevopsHomeAssignment"
+			 bat "docker rm DevopsHomeAssignment"
+		 }
+	  }
 	 stage("create docker image"){
              steps {
 	         bat "docker build -t i-arshdeepsingh-master --no-cache -f Dockerfile ."
@@ -50,14 +52,14 @@ pipeline {
 	stage ("Push docker image to docker hub"){
 	      steps{
 		       bat "docker tag i-arshdeepsingh-master ${registry}:${BUILD_NUMBER}"
-			   withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
-			    bat "docker push ${registry}:${BUILD_NUMBER}"
-			   }
+		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
+			  bat "docker push ${registry}:${BUILD_NUMBER}"
+		       }
 		   }
 	}
 	stage ("Docker Deployment"){
 	      steps {
-		      bat "docker run --name DevopsHomeAssignment -d -p 7100:8080 ${registry}:${BUILD_NUMBER}"
+		      bat "docker run --name c-arshdeepsingh-master -d -p 7100:8080 ${registry}:${BUILD_NUMBER}"
 	       }
 		
 	}
