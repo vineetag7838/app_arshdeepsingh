@@ -37,13 +37,6 @@ pipeline {
               }
             }
           }
-	 stage("Remove docker images and container"){
-		 steps {
-			 bat "docker rmi arshdeepsingh/devops-home-assignment:${BUILD_NUMBER} -1"
-			 bat "docker stop DevopsHomeAssignment"
-			 bat "docker rm DevopsHomeAssignment"
-		 }
-	  }
 	 stage("create docker image"){
              steps {
 	         bat "docker build -t i-arshdeepsingh-master --no-cache -f Dockerfile ."
