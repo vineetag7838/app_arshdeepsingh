@@ -56,7 +56,7 @@ pipeline {
 	}
 	stage ("Docker Deployment"){
 	      steps {
-	          bat "docker run --name DevopsHomeAssignment -d -p 7100:80 arshdeepsingh070/devops-home-assignment:v2"
+	          bat "docker run --name DevopsHomeAssignment -d -p 7100:8080 arshdeepsingh070/devops-home-assignment:v2"
 	       }
 		
 	}
