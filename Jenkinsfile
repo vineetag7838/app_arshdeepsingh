@@ -1,6 +1,11 @@
 pipeline { 
     agent any
     
+	environment {
+	    def mvn = tool 'Maven3';
+		def registry = 'arshdeepsingh070/devops-home-assignment';
+	 
+	}
     tools {
         maven 'Maven3'
     }
@@ -31,10 +36,6 @@ pipeline {
             }
         }
         stage("SonarQube analysis") {
-            agent any
-			environment {
-			    def mvn = tool 'Maven3';
-           }
             steps {
               withSonarQubeEnv('SonarQubeScanner') {
                 bat "${mvn}/bin/mvn sonar:sonar"
@@ -48,15 +49,15 @@ pipeline {
 	}
 	stage ("Push docker image to docker hub"){
 	      steps{
-		       bat "docker tag i-arshdeepsingh-master arshdeepsingh070/devops-home-assignment:v2"
+		       bat "docker tag i-arshdeepsingh-master ${registry}:v2"
 			   withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
-			    bat "docker push arshdeepsingh070/devops-home-assignment:v2"
+			    bat "docker push ${registry}:v2"
 			   }
 		   }
 	}
 	stage ("Docker Deployment"){
 	      steps {
-	          bat "docker run --name DevopsHomeAssignment -d -p 7100:8080 arshdeepsingh070/devops-home-assignment:v2"
+	          bat "docker run --name DevopsHomeAssignment -d -p 7100:8080 ${registry}:v2"
 	       }
 		
 	}
