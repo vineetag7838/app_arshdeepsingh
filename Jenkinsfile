@@ -44,8 +44,8 @@ pipeline {
           }
 	 stage("Remove Existing"){
 		 if('docker ps -q -f name=c-arshdeepsingh-master'){
-                  "docker stop c-arshdeepsingh-master"
-                  "docker rm c-arshdeepsingh-master"
+                  bat "docker stop c-arshdeepsingh-master"
+                  bat "docker rm c-arshdeepsingh-master"
               }
 	 }
 	 stage("create docker image"){
