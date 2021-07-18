@@ -42,14 +42,6 @@ pipeline {
               }
             }
           }
-	 stage("Remove Existing"){
-		 steps {
-		 if('docker ps -q -f name=c-arshdeepsingh-master'){
-                  bat "docker stop c-arshdeepsingh-master"
-                  bat "docker rm c-arshdeepsingh-master"
-              }
-	    }		 
-	 }
 	 stage("create docker image"){
              steps {
 	         bat "docker build -t i-arshdeepsingh-master:${BUILD_NUMBER} --no-cache -f Dockerfile ."
