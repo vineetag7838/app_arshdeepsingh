@@ -44,12 +44,12 @@ pipeline {
           }
 	 stage("create docker image"){
              steps {
-	         bat "docker build -t i-arshdeepsingh-master --no-cache -f Dockerfile ."
+	         bat "docker build -t i-arshdeepsingh-master:${BUILD_NUMBER} --no-cache -f Dockerfile ."
 	     }
 	}
 	stage ("Push docker image to docker hub"){
 	      steps{
-		       bat "docker tag i-arshdeepsingh-master ${registry}:${BUILD_NUMBER}"
+		       bat "docker tag i-arshdeepsingh-master:${BUILD_NUMBER} ${registry}:${BUILD_NUMBER}"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
 			  bat "docker push ${registry}:${BUILD_NUMBER}"
 		       }
