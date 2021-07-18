@@ -44,7 +44,7 @@ pipeline {
           }
 	 stage("create docker image"){
              steps {
-	         bat "docker build -t i-arshdeepsingh-master --no-cache -f Dockerfile ."
+	         bat "docker build -t i-arshdeepsingh-master:${BUILD_NUMBER} --no-cache -f Dockerfile ."
 	     }
 	}
 	stage ("Push docker image to docker hub"){
