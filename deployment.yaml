@@ -1,21 +1,21 @@
 apiVersion: apps/V1
-kind:  deployment
+kind:  Deployment
 metadata:
-     name: java-demo-project
+     name: java-jenkins-deployment
      labels:
-         app: java-app
+         app: java-jenkins-demo-app
  spec: 
   replicas: 3
   selector:
       matchlabels:
-        app: java-app
+        app: java-jenkins-demo-app
   template:
       metadata:
         labels:
-          app: java-app
+          app: java-jenkins-demo-app
        spec:
          containers:
-           - name: java-app
+           - name: java-jenkins-demo-app
              image: arshdeepsingh070/devops-home-assignment:latest
              ports:
                -  name: http
@@ -25,16 +25,13 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata: 
-    name: java-app
+    name: java-jenkins-demo-app
 spec: 
    type: NodePort
    selector:
-       app: java-app
+       app: java-jenkins-demo-app
    ports:
       - protocol: TCP
         nodePort: 30105
         port: 80
-        targetPort: 80
-
-               
-             
+        targetPort: 80              
