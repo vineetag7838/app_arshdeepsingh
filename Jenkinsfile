@@ -9,7 +9,7 @@ pipeline {
 	    def registry = 'arshdeepsingh070/devops-home-assignment';
 	    project_id = 'java-jenkins-deployment'
 	    cluster_name = 'jenkins-java-cluster'
-	    location = 'us-central1-c'
+	    location = 'us-central1'
 	    credentials_id = 'GoogleJenkinsTest'
 	 
     }
