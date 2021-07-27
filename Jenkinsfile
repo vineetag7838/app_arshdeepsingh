@@ -7,10 +7,10 @@ pipeline {
     environment {
 	    def mvn = tool 'Maven3';
 	    def registry = 'arshdeepsingh070/devops-home-assignment';
-	    project_id = 'testJenins-'
-	    cluster_name = 'java'
-	    location = 'us-centrall-c'
-	    credentials_id = 'TestJenkins'
+	    project_id = 'java-jenkins-deployment'
+	    cluster_name = 'java-demo-cluster'
+	    location = 'us-central1-c'
+	    credentials_id = 'GoogleJenkinsTest'
 	 
     }
     
@@ -60,21 +60,8 @@ pipeline {
 			  bat "docker push ${registry}:latest"     
 		       }
 		   }
-	}
-	
-	stage ("Docker Deployment"){
-	      steps {
-		      bat "docker run --name c-arshdeepsingh-master -d -p 7100:8080 ${registry}:${BUILD_NUMBER}"
-	       }
-		
-	}
-	    
-	stage ("The end"){
-	      steps{
-		    echo "The process end"
-	       }
-	}   
-	    stage ("Deploy to GKE"){
+	} 
+	stage ("Deploy to GKE"){
 		steps{	
 	              step ([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment.yaml', credentialsId: env.credentials_id, verifyDeployment: true])
 		}
