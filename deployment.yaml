@@ -33,5 +33,5 @@ spec:
    ports:
       - protocol: TCP
         nodePort: 30105
-        port: 80
+        port: 8080
         targetPort: 8080              
