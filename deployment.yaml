@@ -25,7 +25,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata: 
-    name: java-jenkins-demo-app
+    name: java-jenkins-service
 spec: 
    type: NodePort
    selector:
