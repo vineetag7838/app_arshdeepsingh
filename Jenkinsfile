@@ -7,10 +7,6 @@ pipeline {
     environment {
 	    def mvn = tool 'Maven3';
 	    def registry = 'arshdeepsingh070/devops-home-assignment';
-	    project_id = 'java-jenkins-deployment'
-	    cluster_name = 'java-jenkins-deployment-cluster'
-	    location = 'us-central1'
-	    credentials_id = 'GoogleJenkinsTest'
 	 
     }
     
@@ -61,10 +57,11 @@ pipeline {
 		       }
 		   }
 	} 
-	stage ("Deploy to GKE"){
-		steps{	
-	              step ([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment.yaml', credentialsId: env.credentials_id, verifyDeployment: true])
-		}
-	    }
+	stage ("Docker Deployment"){
+	      steps {
+		      bat "docker run --name c-arshdeepsingh-master -d -p 7100:8080 ${registry}:${BUILD_NUMBER}"
+	       }
+		
+	}
     }
 }
