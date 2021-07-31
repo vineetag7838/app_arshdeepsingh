@@ -32,6 +32,6 @@ spec:
        app: java-jenkins-demo-app
    ports:
       - protocol: TCP
-        nodePort: 30158
+        nodePort: 30157
         port: 8080
         targetPort: 8080              
