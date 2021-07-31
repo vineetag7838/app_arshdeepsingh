@@ -5,7 +5,7 @@ metadata:
   labels:
     app: java-jenkins-demo-app
 spec: 
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
         app: java-jenkins-demo-app
