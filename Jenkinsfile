@@ -53,17 +53,17 @@ pipeline {
 	}
 	stage ("Push docker image to docker hub"){
 	      steps{
-		       bat "docker tag i-arshdeepsingh-develop:${BUILD_NUMBER} ${registry}:${BUILD_NUMBER}"
-		       bat "docker tag i-arshdeepsingh-develop:${BUILD_NUMBER} ${registry}:latest"
+		       bat "docker tag i-arshdeepsingh-develop:${BUILD_NUMBER} ${registry}:develop-${BUILD_NUMBER}"
+		       bat "docker tag i-arshdeepsingh-develop:${BUILD_NUMBER} ${registry}:develop-latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
-			  bat "docker push ${registry}:${BUILD_NUMBER}"
-			  bat "docker push ${registry}:latest"     
+			  bat "docker push ${registry}:develop-${BUILD_NUMBER}"
+			  bat "docker push ${registry}:develop-latest"     
 		       }
 		   }
 	} 
 	stage ("Docker Deployment"){
 	      steps {
-		      bat "docker run --name c-arshdeepsingh-develop -d -p 7300:8080 ${registry}:${BUILD_NUMBER}"
+		      bat "docker run --name c-arshdeepsingh-develop -d -p 7300:8080 ${registry}:develop-latest"
 	       }
 		
 	}
