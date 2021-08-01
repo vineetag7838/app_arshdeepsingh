@@ -7,7 +7,7 @@ pipeline {
     environment {
 	    def mvn = tool 'Maven3';
 	    def registry = 'arshdeepsingh070/devops-home-assignment';
-	    project_id = 'devops-final-project'
+	    project_id = 'devops-final-project-321607'
 	    cluster_name = 'devops-java-jenkins-cluster'
 	    location = 'us-central1'
 	    credentials_id = 'Test_GoogleJenkins'
