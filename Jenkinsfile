@@ -10,7 +10,7 @@ pipeline {
 	    project_id = 'devops-final-project'
 	    cluster_name = 'devops-java-jenkins-cluster'
 	    location = 'us-central1'
-	    credentials_id = 'GoogleJenkinsTest'
+	    credentials_id = 'Test_GoogleJenkins'
 	 
     }
     
@@ -54,7 +54,7 @@ pipeline {
 	stage ("Push docker image to docker hub"){
 	      steps{
 		       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-${BUILD_NUMBER}"
-		       bat "docker tag i-arshdeepsingh-master:master${BUILD_NUMBER} ${registry}:master-latest"
+		       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
 			  bat "docker push ${registry}:master-${BUILD_NUMBER}"
 			  bat "docker push ${registry}:master-latest"     
