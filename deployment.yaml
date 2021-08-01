@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: java-jenkins-demo-app
-          image: arshdeepsingh070/devops-home-assignment:latest
+          image: arshdeepsingh070/devops-home-assignment:master-latest
           ports:
             -  name: http
                containerPort: 8080

@@ -56,14 +56,14 @@ pipeline {
 		       bat "docker tag i-arshdeepsingh-master:${BUILD_NUMBER} ${registry}:${BUILD_NUMBER}"
 		       bat "docker tag i-arshdeepsingh-master:${BUILD_NUMBER} ${registry}:latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
-			  bat "docker push ${registry}:${BUILD_NUMBER}"
-			  bat "docker push ${registry}:latest"     
+			  bat "docker push ${registry}:master-${BUILD_NUMBER}"
+			  bat "docker push ${registry}:master-latest"     
 		       }
 		   }
 	} 
 	stage ("Docker Deployment"){
 	      steps {
-		      bat "docker run --name c-arshdeepsingh-master -d -p 7200:8080 ${registry}:${BUILD_NUMBER}"
+		      bat "docker run --name c-arshdeepsingh-master -d -p 7200:8080 ${registry}:master-latest"
 	       }
 		
 	}
