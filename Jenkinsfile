@@ -34,25 +34,71 @@ pipeline {
                 bat 'mvn clean install'
             }
         }
+        
 	stage('Unit Testing') {
-            steps {
-                bat 'mvn test'
+      when {
+          branch 'master'
+           }
+      steps {
+          bat 'mvn test'
             }
         }    
+        
         stage("SonarQube analysis") {
-            steps {
+          when {
+              branch 'develop'
+          }
+          steps {
               withSonarQubeEnv('SonarQubeScanner') {
                 bat "${mvn}/bin/mvn sonar:sonar"
               }
             }
           }
+          stage('Parallel In Sequential') {
+                    parallel {
+                        stage('In Parallel 1') {
+                            steps {
+                                echo "In Parallel 1"
+                            }
+                        }
+                        stage('In Parallel 2') {
+                            steps {
+                                echo "In Parallel 2"
+                            }
+                        }
+                    }
+                }
+          
 	 stage("create docker image"){
+	       when {
+              branch 'master'
+          }
+             steps {
+	         bat "docker build -t i-arshdeepsingh-master:master-${BUILD_NUMBER} --no-cache -f Dockerfile ."
+	     }
+	     when {
+              branch 'develop'
+          }
              steps {
 	         bat "docker build -t i-arshdeepsingh-develop:develop-${BUILD_NUMBER} --no-cache -f Dockerfile ."
 	     }
 	}
 	stage ("Push docker image to docker hub"){
+	    when {
+              branch 'master'
+          }  
 	      steps{
+		       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-${BUILD_NUMBER}"
+		       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-latest"
+		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
+			  bat "docker push ${registry}:master-${BUILD_NUMBER}"
+			  bat "docker push ${registry}:master-latest"     
+		       }
+		   }
+		   when {
+              branch 'develop'
+          }
+          steps{
 		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-${BUILD_NUMBER}"
 		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
@@ -62,7 +108,16 @@ pipeline {
 		   }
 	} 
 	stage ("Docker Deployment"){
+	      when {
+              branch 'master'
+          }  
 	      steps {
+		      bat "docker run --name c-arshdeepsingh-master -d -p 7200:8080 ${registry}:master-latest"
+	       }
+	     when {
+              branch 'develop'
+          }  
+          steps {
 		      bat "docker run --name c-arshdeepsingh-develop -d -p 7300:8080 ${registry}:develop-latest"
 	       }
 		
@@ -71,6 +126,6 @@ pipeline {
 		steps{	
 	              step ([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment.yaml', credentialsId: env.credentials_id, verifyDeployment: true])
 		}
-	}
+	    }
     }
 }
