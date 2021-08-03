@@ -68,37 +68,48 @@ pipeline {
                         }
                     }
                 }
-          
-	 stage("create docker image"){
-	       when {
-              branch 'master'
-          }
-             steps {
-	         bat "docker build -t i-arshdeepsingh-master:master-${BUILD_NUMBER} --no-cache -f Dockerfile ."
-	     }
-	     when {
-              branch 'develop'
-          }
-             steps {
-	         bat "docker build -t i-arshdeepsingh-develop:develop-${BUILD_NUMBER} --no-cache -f Dockerfile ."
-	     }
-	}
-	stage ("Push docker image to docker hub"){
-	    when {
-              branch 'master'
-          }  
-	      steps{
-		       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-${BUILD_NUMBER}"
-		       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-latest"
+           stage("create docker image") {
+                    parallel {
+                        stage('For master') {
+                           when {
+                               branch 'master'
+                           }
+                            steps {
+                                bat "docker build -t i-arshdeepsingh-master:master-${BUILD_NUMBER} --no-cache -f Dockerfile ."
+                            }
+                        }
+                        stage('For Develop') {
+                         when {
+                           branch 'develop'
+                           }
+                            steps {
+                               bat "docker build -t i-arshdeepsingh-develop:develop-${BUILD_NUMBER} --no-cache -f Dockerfile ."
+                            }
+                        }
+                    }
+                }  
+                
+                
+           stage("Push docker image to docker hub") {
+                    parallel {
+                        stage('For master') {
+                        when {
+                               branch 'master'
+                           }
+                            steps {
+                               	       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-${BUILD_NUMBER}"
+		                            bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
 			  bat "docker push ${registry}:master-${BUILD_NUMBER}"
 			  bat "docker push ${registry}:master-latest"     
 		       }
-		   }
-		   when {
+                            }
+                        }
+                        stage('For develop') {
+                            when {
               branch 'develop'
           }
-          steps{
+                           steps{
 		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-${BUILD_NUMBER}"
 		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
@@ -106,22 +117,32 @@ pipeline {
 			  bat "docker push ${registry}:develop-latest"     
 		       }
 		   }
-	} 
-	stage ("Docker Deployment"){
-	      when {
+                        }
+                    }
+                }
+                      
+	stage("Docker Deployment") {
+                    parallel {
+                        stage('For master') {
+                            when {
               branch 'master'
           }  
 	      steps {
 		      bat "docker run --name c-arshdeepsingh-master -d -p 7200:8080 ${registry}:master-latest"
 	       }
-	     when {
+                        }
+                        stage('For develop') {
+                            when {
               branch 'develop'
           }  
           steps {
 		      bat "docker run --name c-arshdeepsingh-develop -d -p 7300:8080 ${registry}:develop-latest"
 	       }
-		
-	}
+                        }
+                    }
+                }
+                
+	
 	stage ("Deploy to GKE"){
 		steps{	
 	              step ([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment.yaml', credentialsId: env.credentials_id, verifyDeployment: true])
