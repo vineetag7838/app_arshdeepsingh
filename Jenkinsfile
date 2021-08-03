@@ -69,57 +69,22 @@ pipeline {
                     }
                 }
            stage("create docker image") {
-                    parallel {
-                        stage('For master') {
-                           when {
-                               branch 'master'
-                           }
-                            steps {
-                                bat "docker build -t i-arshdeepsingh-master:master-${BUILD_NUMBER} --no-cache -f Dockerfile ."
-                            }
-                        }
-                        stage('For Develop') {
-                         when {
-                           branch 'develop'
-                           }
-                            steps {
-                               bat "docker build -t i-arshdeepsingh-develop:develop-${BUILD_NUMBER} --no-cache -f Dockerfile ."
-                            }
-                        }
-                    }
+                   steps {
+                          bat "docker build -t i-arshdeepsingh:${BUILD_NUMBER} --no-cache -f Dockerfile ."
+                   }
                 }  
                 
                 
            stage("Push docker image to docker hub") {
-                    parallel {
-                        stage('For master') {
-                        when {
-                               branch 'master'
-                           }
-                            steps {
-                               	       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-${BUILD_NUMBER}"
-		                            bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-latest"
+                  steps{
+		       bat "docker tag i-arshdeepsingh:${BUILD_NUMBER} ${registry}:${BUILD_NUMBER}"
+		       bat "docker tag i-arshdeepsingh:${BUILD_NUMBER} ${registry}:latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
-			  bat "docker push ${registry}:master-${BUILD_NUMBER}"
-			  bat "docker push ${registry}:master-latest"     
+			  bat "docker push ${registry}:${BUILD_NUMBER}"
+			  bat "docker push ${registry}:latest"     
 		       }
-                            }
-                        }
-                        stage('For develop') {
-                            when {
-              branch 'develop'
-          }
-                           steps{
-		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-${BUILD_NUMBER}"
-		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-latest"
-		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
-			  bat "docker push ${registry}:develop-${BUILD_NUMBER}"
-			  bat "docker push ${registry}:develop-latest"     
-		       }
-		   }
-                        }
-                    }
-                }
+		     }
+           }
                       
 	stage("Docker Deployment") {
                     parallel {
@@ -128,7 +93,7 @@ pipeline {
               branch 'master'
           }  
 	      steps {
-		      bat "docker run --name c-arshdeepsingh-master -d -p 7200:8080 ${registry}:master-latest"
+		      bat "docker run --name c-arshdeepsingh-master -d -p 7200:8080 ${registry}:latest"
 	       }
                         }
                         stage('For develop') {
@@ -136,7 +101,7 @@ pipeline {
               branch 'develop'
           }  
           steps {
-		      bat "docker run --name c-arshdeepsingh-develop -d -p 7300:8080 ${registry}:develop-latest"
+		      bat "docker run --name c-arshdeepsingh-develop -d -p 7300:8080 ${registry}:latest"
 	       }
                         }
                     }
