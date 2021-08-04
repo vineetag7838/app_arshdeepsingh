@@ -61,6 +61,19 @@ pipeline {
 		       }
 		   }
 	} 
+	stage('Clean docker containers'){
+            steps{
+                script{
+                
+                    def doc_containers = bat(returnStdout: true, script: 'docker container ps -aq').replaceAll("\n", " ") 
+                    if (doc_containers) {
+                        bat "docker stop ${doc_containers}"
+                    }
+                    
+                }
+            }
+    }
+    
 	stage ("Docker Deployment"){
 	      steps {
 		      bat "docker run --name c-arshdeepsingh-develop -d -p 7300:8080 ${registry}:develop-latest"
