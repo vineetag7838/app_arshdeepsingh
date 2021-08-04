@@ -63,7 +63,7 @@ pipeline {
 	} 
 	stage('Clean docker containers'){
             steps{
-                  bat 'docker rm -f myjob && echo "container myjob removed" || echo "container myjob does not exist" '
+                  bat 'docker rm -f c-arshdeepsingh-master && echo "container c-arshdeepsingh-master removed" || echo "container c-arshdeepsingh-master does not exist" '
                 }
             }
 	stage ("Docker Deployment"){
