@@ -63,7 +63,7 @@ pipeline {
 	} 
 	stage ("Docker Deployment"){
 	      steps {
-		      bat "docker run --name c-arshdeepsingh-master -d -p 7300:8080 ${registry}:master-latest"
+		      bat "docker run --name c-arshdeepsingh-master -d -p 7200:8080 ${registry}:master-latest"
 	       }
 		
 	}
