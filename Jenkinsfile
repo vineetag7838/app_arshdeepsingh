@@ -65,16 +65,15 @@ pipeline {
             steps{
                   bat 'docker rm -f c-arshdeepsingh-master && echo "container c-arshdeepsingh-master removed" || echo "container c-arshdeepsingh-master does not exist" '
                 }
-            }
+    }
 	stage ("Docker Deployment"){
 	      steps {
 		      bat "docker run --name c-arshdeepsingh-master -d -p 7200:8080 ${registry}:master-latest"
 	       }
-		
 	}
 	stage ("Deploy to GKE"){
 		steps{	
-	              step ([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment.yaml', credentialsId: env.credentials_id, verifyDeployment: true])
+	             bat "kubectl apply -f deployment.yaml"
 		}
 	}
     }
