@@ -51,20 +51,24 @@ pipeline {
 	         bat "docker build -t i-arshdeepsingh-master:master-${BUILD_NUMBER} --no-cache -f Dockerfile ."
 	     }
 	}
-	stage ("Push docker image to docker hub"){
-	      steps{
-		       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-${BUILD_NUMBER}"
+	stage('Container') {
+         parallel {
+          stage('PreContainer check') {
+             steps{
+                  bat 'docker rm -f c-arshdeepsingh-master && echo "container c-arshdeepsingh-master removed" || echo "container c-arshdeepsingh-master does not exist" '
+                }
+          }
+          stage('Push docker image to docker hu') {
+              steps {
+               bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-${BUILD_NUMBER}"
 		       bat "docker tag i-arshdeepsingh-master:master-${BUILD_NUMBER} ${registry}:master-latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
 			  bat "docker push ${registry}:master-${BUILD_NUMBER}"
 			  bat "docker push ${registry}:master-latest"     
 		       }
-		   }
-	} 
-	stage('Clean docker containers'){
-            steps{
-                  bat 'docker rm -f c-arshdeepsingh-master && echo "container c-arshdeepsingh-master removed" || echo "container c-arshdeepsingh-master does not exist" '
-                }
+           }
+         }
+       }
     }
 	stage ("Docker Deployment"){
 	      steps {
