@@ -51,16 +51,25 @@ pipeline {
 	         bat "docker build -t i-arshdeepsingh-develop:develop-${BUILD_NUMBER} --no-cache -f Dockerfile ."
 	     }
 	}
-	stage ("Push docker image to docker hub"){
-	      steps{
-		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-${BUILD_NUMBER}"
+	stage('Container') {
+         parallel {
+          stage('PreContainer check') {
+             steps{
+                  bat 'docker rm -f c-arshdeepsingh-develop && echo "container c-arshdeepsingh-develop removed" || echo "container c-arshdeepsingh-develop does not exist" '
+                }
+          }
+          stage('Push docker image to docker hub') {
+              steps {
+               bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:master-${BUILD_NUMBER}"
 		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
 			  bat "docker push ${registry}:develop-${BUILD_NUMBER}"
 			  bat "docker push ${registry}:develop-latest"     
 		       }
-		   }
-	} 
+           }
+         }
+       }
+    }
     
 	stage ("Docker Deployment"){
 	      steps {
