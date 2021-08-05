@@ -61,19 +61,6 @@ pipeline {
 		       }
 		   }
 	} 
-	stage('Clean docker containers'){
-            steps{
-                script{
-                
-                    def doc_containers = bat "(script: 'docker container ps -f name=c-arshdeepsingh-develop)"
-                    echo "${doc_containers}"
-                    if (doc_containers) {
-                        bat "docker stop ${doc_containers}"
-                    }
-                    
-                }
-            }
-    }
     
 	stage ("Docker Deployment"){
 	      steps {
