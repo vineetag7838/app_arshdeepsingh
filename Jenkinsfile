@@ -38,14 +38,7 @@ pipeline {
             steps {
                 bat 'mvn test'
             }
-        }    
-        stage("SonarQube analysis") {
-            steps {
-              withSonarQubeEnv('SonarQubeScanner') {
-                bat "${mvn}/bin/mvn sonar:sonar"
-              }
-            }
-          }
+        }
 	 stage("create docker image"){
              steps {
 	         bat "docker build -t i-arshdeepsingh-master:master-${BUILD_NUMBER} --no-cache -f Dockerfile ."
