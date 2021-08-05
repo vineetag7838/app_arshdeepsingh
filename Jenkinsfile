@@ -33,12 +33,7 @@ pipeline {
             steps {
                 bat 'mvn clean install'
             }
-        }
-	stage('Unit Testing') {
-            steps {
-                bat 'mvn test'
-            }
-        }    
+        }  
         stage("SonarQube analysis") {
             steps {
               withSonarQubeEnv('SonarQubeScanner') {
