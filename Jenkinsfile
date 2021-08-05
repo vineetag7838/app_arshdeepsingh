@@ -60,7 +60,7 @@ pipeline {
           }
           stage('Push docker image to docker hub') {
               steps {
-               bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:master-${BUILD_NUMBER}"
+               bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-${BUILD_NUMBER}"
 		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
 			  bat "docker push ${registry}:develop-${BUILD_NUMBER}"
