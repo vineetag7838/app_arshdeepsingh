@@ -7,11 +7,6 @@ pipeline {
     environment {
 	    def mvn = tool 'Maven3';
 	    def registry = 'arshdeepsingh070/devops-home-assignment';
-	    project_id = 'devops-final-project-321607'
-	    cluster_name = 'devops-java-jenkins-cluster'
-	    location = 'us-central1-c'
-	    credentials_id = 'Test_GoogleJenkins'
-	 
     }
     
     options {
@@ -43,7 +38,7 @@ pipeline {
           }
 	 stage("create docker image"){
              steps {
-	         bat "docker build -t i-arshdeepsingh-develop:develop-${BUILD_NUMBER} --no-cache -f Dockerfile ."
+	         bat "docker build -t i-arshdeepsingh-develop:${BUILD_NUMBER} --no-cache -f Dockerfile ."
 	     }
 	}
 	stage('Container') {
@@ -55,11 +50,11 @@ pipeline {
           }
           stage('Push docker image to docker hub') {
               steps {
-               bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-${BUILD_NUMBER}"
-		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:develop-latest"
+               bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:${BUILD_NUMBER}"
+		       bat "docker tag i-arshdeepsingh-develop:develop-${BUILD_NUMBER} ${registry}:latest"
 		       withDockerRegistry([credentialsId: 'Test_Docker', url:""]){
-			  bat "docker push ${registry}:develop-${BUILD_NUMBER}"
-			  bat "docker push ${registry}:develop-latest"     
+			  bat "docker push ${registry}:${BUILD_NUMBER}"
+			  bat "docker push ${registry}:latest"     
 		       }
            }
          }
@@ -68,7 +63,7 @@ pipeline {
     
 	stage ("Docker Deployment"){
 	      steps {
-		      bat "docker run --name c-arshdeepsingh-develop -d -p 7300:8080 ${registry}:develop-latest"
+		      bat "docker run --name c-arshdeepsingh-develop -d -p 7300:8080 ${registry}:latest"
 	       }
 		
 	}
