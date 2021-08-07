@@ -45,7 +45,7 @@ pipeline {
          parallel {
           stage('PreContainer check') {
              steps{
-                  bat 'docker rm -f c-arshdeepsingh-develop && echo "container c-arshdeepsingh-develop removed" || echo "container c-arshdeepsingh-develop does not exist" '
+                  bat 'docker rm -f c-arshdeepsingh-develop || exit '
                 }
           }
           stage('Push docker image to docker hub') {
