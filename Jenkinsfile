@@ -43,7 +43,7 @@ pipeline {
          parallel {
           stage('PreContainer check') {
              steps{
-                  bat 'docker rm -f c-arshdeepsingh-master && echo "container c-arshdeepsingh-master removed" || echo "container c-arshdeepsingh-master does not exist" '
+                  bat 'docker rm -f c-arshdeepsingh-master || exit '
                 }
           }
           stage('Push docker image to docker hu') {
