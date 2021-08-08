@@ -18,7 +18,6 @@ spec:
       containers:
         - name: java-jenkins-demo-app-master
           image: arshdeepsingh070/devops-home-assignment:master-latest
-          imagePullPolicy: Always
           ports:
             -  name: http
                containerPort: 8080
