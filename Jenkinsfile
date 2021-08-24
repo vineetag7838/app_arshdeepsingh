@@ -30,11 +30,17 @@ pipeline {
             }
         }  
         stage("SonarQube analysis") {
-            steps {
-              withSonarQubeEnv('SonarQubeScanner') {
-                bat "${mvn}/bin/mvn sonar:sonar"
-              }
-            }
+            environment 
+		{
+		   scannerHome = tool name: 'SonarQubeScanner'
+		}
+		steps
+		{
+		   withSonarQubeEnv("Test_Sonar")
+		   {
+			  bat "mvn sonar:sonar -Dhttps.protocols=TLSv1.2"
+		   }
+		}
           }
 	 stage("create docker image"){
              steps {
